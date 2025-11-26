@@ -186,11 +186,20 @@ class Board:
     
 
     def toggle_flag(self, col: int, row: int) -> None:
+        if not self.is_inbounds(col,row):
+            return
+        index=self.index(col,row)
+        cell= self.cells[index]
+
+        if cell.state.is_revealed:
+            return
+        
+        cell.state.is_flagged=not cell.state.is_flagged
         # TODO: Toggle a flag on a non-revealed cell.
         # if not self.is_inbounds(col, row):
         #     return
         
-        pass
+
 
     def flagged_count(self) -> int:
         # TODO: Return current number of flagged cells.
