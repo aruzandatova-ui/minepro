@@ -68,9 +68,31 @@ class Board:
 
     def is_inbounds(self, col: int, row: int) -> bool:
         return 0 <= col < self.cols and 0 <= row < self.rows
-        
+    
 
-    def neighbors(self, col: int, row: int) -> List[Tuple[int, int]]:
+    def neighbors(self, col: int, row: int):
+      deltas = [
+        (-1, -1), (0, -1), (1, -1),
+        (-1, 0),           (1, 0),
+        (-1, 1), (0, 1), (1, 1),
+    ]
+
+      result = []
+
+      for dc, dr in deltas:
+        nc = col + dc
+        nr = row + dr
+
+        if self.is_inbounds(nc, nr):
+            result.append((nc, nr))
+
+      return result
+    
+
+   
+
+
+
         # TODO: Return list of valid neighboring coordinates around (col,row).
         # deltas = [
         #     (-1, -1), (0, -1), (1, -1),
@@ -80,7 +102,7 @@ class Board:
         # result = []
         
         # return result
-        pass
+    
 
     def place_mines(self, safe_col: int, safe_row: int) -> None:
         # TODO: Place mines randomly, guaranteeing the first click and its neighbors are safe. And Compute adjacency counts
