@@ -118,7 +118,7 @@ class InputController:
     def handle_mouse(self, pos, button) -> None:
         col, row = self.pos_to_grid(pos[0], pos[1])
         if col == -1:
-          return
+            return
         game = self.game
 
         game.highlight_targets.clear()
@@ -126,19 +126,22 @@ class InputController:
         cell_state = game.board.cells[game.board.index(col, row)].state
 
         if button == config.mouse_left:
+            print("Left button to open a cell")
             if not game.started:
-              game.started = True 
-              game.start_ticks_ms = pygame.time.get_ticks()
+                game.started = True 
+                game.start_ticks_ms = pygame.time.get_ticks()
         
             game.board.reveal(col, row)
     
         elif button == config.mouse_right:
+            print("Right for flags")
             game.board.toggle_flag(col, row)
            
         elif button == config.mouse_middle:
+            print("Middle is for highlight")
             if cell_state.is_revealed and cell_state.adjacent > 0:
-              neighbors = game.board.neighbors(col, row)
-              game.highlight_targets = {
+                neighbors = game.board.neighbors(col, row)
+                game.highlight_targets = {
                 (nc, nr)
                 for (nc, nr) in neighbors
                 if not game.board.cells[game.board.index(nc, nr)].state.is_revealed
@@ -147,7 +150,30 @@ class InputController:
                 pygame.time.get_ticks() + config.highlight_duration_ms
             )
         # TODO: Handle mouse button events: left=reveal, right=flag, middle=neighbor highlight  in here
+         # col, row = self.pos_to_grid(pos[0], pos[1])
+        # if col == -1:
+        #     return
+        # game = self.game
+        # if button == config.mouse_left:
+        #     game.highlight_targets.clear()
         
+        #         if not game.started:
+        #             game.started = 
+        #             game.start_ticks_ms = pygame.time.get_ticks()
+    
+        # elif button == config.mouse_right:
+        #     game.highlight_targets.clear()
+        #        
+        # elif button == config.mouse_middle:
+        #         neighbors = []
+        #         game.highlight_targets = {
+        #             (nc, nr)
+        #             for (nc, nr) in neighbors
+        #             if not game.board.cells[game.board.index(nc, nr)].state.is_revealed
+        #         }
+        
+        #         game.highlight_until_ms = pygame.time.get_ticks() + config.highlight_duration_ms
+
     
 
 class Game:
