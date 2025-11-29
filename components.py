@@ -156,36 +156,36 @@ class Board:
 
     def reveal(self, col: int, row: int) -> None:
     
-    # Check if coordinates are within bounds
+    
       if not self.is_inbounds(col, row):
         return
     
-    # Don't allow moves after game is over
+    
       if self.game_over or self.win:
         return
     
-    # First click - place mines
+    
       if not self._mines_placed:
          self.place_mines(col, row)
     
       index = self.index(col, row)
       cell = self.cells[index]
     
-    # Don't reveal flagged or already revealed cells
+    
       if cell.state.is_flagged or cell.state.is_revealed:
         return
     
-    # Reveal this cell
+   
       cell.state.is_revealed = True
       self.revealed_count += 1
     
-    # Game over if it's a mine
+    
       if cell.state.is_mine:
         self.game_over = True
         self._reveal_all_mines()
         return
     
-    # If it's an empty cell (adjacent == 0), flood fill to neighbors
+    
       if cell.state.adjacent == 0:
          stack = [(col, row)]
          visited = set([(col,row)])
@@ -200,20 +200,20 @@ class Board:
                 neighbor_index = self.index(nc, nr)
                 neighbor_cell = self.cells[neighbor_index]
                 
-                # Skip if flagged, already revealed, or visited
+                
                 if neighbor_cell.state.is_flagged or neighbor_cell.state.is_revealed:
                     continue
                 
-                # Reveal the neighbor
+                
                 neighbor_cell.state.is_revealed = True
                 self.revealed_count += 1
                 visited.add ((nc,nr))
                 
-                # If neighbor is also empty, add to stack for further expansion
+                
                 if neighbor_cell.state.adjacent == 0:
                     stack.append((nc, nr))
     
-    # Check win condition
+    
       self._check_win()
       
 
