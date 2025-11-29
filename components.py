@@ -101,6 +101,7 @@ class Board:
 
     def place_mines(self, safe_col: int, safe_row: int) -> None:
         import random
+        
         total_cells = self.cols * self.rows
         safe_zone = {(safe_col, safe_row)} | set(self.neighbors(safe_col, safe_row))
         available_cells = total_cells - len(safe_zone)
@@ -125,18 +126,18 @@ class Board:
      
         for r in range(self.rows):
             for c in range(self.cols):
-             idx = self.index(c, r)
-             cell = self.cells[idx]
+                idx = self.index(c, r)
+                cell = self.cells[idx]
             
-             if cell.state.is_mine:
-                continue
+                if cell.state.is_mine:
+                    continue
             
-            count = 0
-            for nc, nr in self.neighbors(c, r):
-                nidx = self.index(nc, nr)
-                if self.cells[nidx].state.is_mine:
-                    count += 1
-                cell.state.adjacent = count
+                count = 0
+                for nc, nr in self.neighbors(c, r):
+                    nidx = self.index(nc, nr)
+                    if self.cells[nidx].state.is_mine:
+                        count += 1
+                    cell.state.adjacent = count
 
         self._mines_placed = True
         
@@ -187,32 +188,26 @@ class Board:
     # If it's an empty cell (adjacent == 0), flood fill to neighbors
       if cell.state.adjacent == 0:
          stack = [(col, row)]
-         visited = set()
+         visited = set([(col,row)])
         
          while stack:
             c, r = stack.pop()
-            current_index = self.index(c, r)
-            current_cell = self.cells[current_index]
-            
-            # Skip if already visited
-            if (c, r) in visited:
-                continue
-            visited.add((c, r))
-            
-            # Reveal all neighbors regardless of adjacent count
+        
             for nc, nr in self.neighbors(c, r):
+                if (nc, nr) in visited:
+                    continue
+                
                 neighbor_index = self.index(nc, nr)
                 neighbor_cell = self.cells[neighbor_index]
                 
                 # Skip if flagged, already revealed, or visited
-                if (neighbor_cell.state.is_flagged or 
-                    neighbor_cell.state.is_revealed or 
-                    (nc, nr) in visited):
+                if neighbor_cell.state.is_flagged or neighbor_cell.state.is_revealed:
                     continue
                 
                 # Reveal the neighbor
                 neighbor_cell.state.is_revealed = True
                 self.revealed_count += 1
+                visited.add ((nc,nr))
                 
                 # If neighbor is also empty, add to stack for further expansion
                 if neighbor_cell.state.adjacent == 0:
