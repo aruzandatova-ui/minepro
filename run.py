@@ -134,11 +134,9 @@ class InputController:
             game.board.reveal(col, row)
     
         elif button == config.mouse_right:
-            print("Right for flags")
             game.board.toggle_flag(col, row)
            
         elif button == config.mouse_middle:
-            print("Middle is for highlight")
             if cell_state.is_revealed and cell_state.adjacent > 0:
                 neighbors = game.board.neighbors(col, row)
                 game.highlight_targets = {
