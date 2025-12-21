@@ -91,9 +91,9 @@ class Renderer:
             pygame.draw.rect(self.screen, config.color_cell_hidden, restart_rect)
             pygame.draw.rect(self.screen, config.color_grid, restart_rect, 2)
 
-        btn_label = self.header_font.render("Restart", True, config.color_header_text)
-        btn_rect = btn_label.get_rect(center=restart_rect.center)
-        self.screen.blit(btn_label, btn_rect)
+            btn_label = self.header_font.render("Restart", True, config.color_header_text)
+            btn_rect = btn_label.get_rect(center=restart_rect.center)
+            self.screen.blit(btn_label, btn_rect)
 
     def draw_result_overlay(self, text: str | None) -> None:
         """Draw a semi-transparent overlay with centered result text, if any."""
