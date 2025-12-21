@@ -128,9 +128,6 @@ class InputController:
 
         if button == config.mouse_left:
             print("Left button to open a cell")
-            if not game.started:
-                game.started = True 
-                game.start_ticks_ms = pygame.time.get_ticks()
         
             game.board.reveal(col, row)
     
