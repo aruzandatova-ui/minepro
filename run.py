@@ -127,9 +127,6 @@ class InputController:
 
         if button == config.mouse_left:
             print("Left button to open a cell")
-            if not game.started:
-                game.started = True 
-                game.start_ticks_ms = pygame.time.get_ticks()
         
             game.board.reveal(col, row)
     
@@ -140,7 +137,9 @@ class InputController:
            
             is_flagged = game.board.cells[game.board.index(col, row)].state.is_flagged
             if (not was_flagged) and is_flagged:
-                game.flag_sound.play()
+                sound = getattr(game, "flag_sound", None)
+                if sound is not None:
+                    sound.play()
 
         elif button == config.mouse_middle:
             if cell_state.is_revealed and cell_state.adjacent > 0:
@@ -185,11 +184,15 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        pygame.mixer.init()
+        self.flag_sound = None
+        try:
+            pygame.mixer.init()
+            self.flag_sound = pygame.mixer.Sound(config.flag_sound_path)
+            self.flag_sound.set_volume(config.flag_sound_volume)
+        except pygame.error:
+            self.flag_sound = None
         pygame.display.set_caption(config.title)
         self.screen = pygame.display.set_mode(config.display_dimension)
-        self.flag_sound = pygame.mixer.Sound(config.flag_sound_path)
-        self.flag_sound.set_volume(config.flag_sound_volume)
         self.clock = pygame.time.Clock()
         self.board = Board(config.cols, config.rows, config.num_mines)
         self.renderer = Renderer(self.screen, self.board)
