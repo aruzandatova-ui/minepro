@@ -31,6 +31,7 @@ class Renderer:
         self.font = pygame.font.Font(config.font_name, config.font_size)
         self.header_font = pygame.font.Font(config.font_name, config.header_font_size)
         self.result_font = pygame.font.Font(config.font_name, config.result_font_size)
+        self.restart_rect: Rect | None = None
 
     def cell_rect(self, col: int, row: int) -> Rect:
         """Return the rectangle in pixels for the given grid cell."""
@@ -71,7 +72,7 @@ class Renderer:
                 )
         pygame.draw.rect(self.screen, config.color_grid, rect, 1)
 
-    def draw_header(self, remaining_mines: int, time_text: str, restart_rect: Rect) -> None:
+    def draw_header(self, remaining_mines: int, time_text: str) -> None:
         """Draw the header bar containing remaining mines and elapsed time."""
         pygame.draw.rect(
             self.screen,
@@ -85,8 +86,10 @@ class Renderer:
         self.screen.blit(left_label, (10, 12))
         self.screen.blit(right_label, (config.width - right_label.get_width() - 10, 12))
 
-        pygame.draw.rect(self.screen, config.color_cell_hidden, restart_rect)
-        pygame.draw.rect(self.screen, config.color_grid, restart_rect, 2)
+        restart_rect = self.restart_rect
+        if restart_rect is not None:
+            pygame.draw.rect(self.screen, config.color_cell_hidden, restart_rect)
+            pygame.draw.rect(self.screen, config.color_grid, restart_rect, 2)
 
         btn_label = self.header_font.render("Restart", True, config.color_header_text)
         btn_rect = btn_label.get_rect(center=restart_rect.center)
@@ -202,6 +205,7 @@ class Game:
         self.start_ticks_ms = 0
         self.end_ticks_ms = 0
         self.restart_rect = Rect(config.width // 2 - 60, 10, 120, 36)
+        self.renderer.restart_rect = self.restart_rect
 
     def reset(self):
         """Reset the game state and start a new board."""
@@ -243,7 +247,7 @@ class Game:
         self.screen.fill(config.color_bg)
         remaining = max(0, config.num_mines - self.board.flagged_count())
         time_text = self._format_time(self._elapsed_ms())
-        self.renderer.draw_header(remaining, time_text, self.restart_rect)
+        self.renderer.draw_header(remaining, time_text)
         now = pygame.time.get_ticks()
         for r in range(self.board.rows):
             for c in range(self.board.cols):
