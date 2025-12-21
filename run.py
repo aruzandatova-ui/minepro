@@ -127,7 +127,8 @@ class InputController:
 
     def handle_mouse(self, pos, button) -> None:
         # Restart button click (left click)
-        if button == config.mouse_left and self.game.restart_rect.collidepoint(pos):
+        restart_rect = getattr(self.game, "restart_rect", None)
+        if button == config.mouse_left and restart_rect and restart_rect.collidepoint(pos):
             self.game.reset()
             return
         col, row = self.pos_to_grid(pos[0], pos[1])
@@ -141,9 +142,6 @@ class InputController:
 
         if button == config.mouse_left:
             print("Left button to open a cell")
-            if not game.started:
-                game.started = True 
-                game.start_ticks_ms = pygame.time.get_ticks()
         
             game.board.reveal(col, row)
     
