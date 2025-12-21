@@ -78,6 +78,7 @@ class Renderer:
             config.color_header,
             Rect(0, 0, config.width, config.margin_top - 4),
         )
+        flags = self.board.flagged_count()
         left_text = f"Mines: {remaining_mines} | Flags: {flags}"
         right_text = f"Time: {time_text}"
         left_label = self.header_font.render(left_text, True, config.color_header_text)
