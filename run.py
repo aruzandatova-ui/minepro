@@ -71,7 +71,7 @@ class Renderer:
                 )
         pygame.draw.rect(self.screen, config.color_grid, rect, 1)
 
-    def draw_header(self, remaining_mines: int, time_text: str, flags: int) -> None:
+    def draw_header(self, remaining_mines: int, time_text: str) -> None:
         """Draw the header bar containing remaining mines and elapsed time."""
         pygame.draw.rect(
             self.screen,
@@ -230,10 +230,9 @@ class Game:
         if pygame.time.get_ticks() > self.highlight_until_ms and self.highlight_targets:
             self.highlight_targets.clear()
         self.screen.fill(config.color_bg)
-        flags = self.board.flagged_count()
-        remaining = max(0, config.num_mines - flags)
+        remaining = max(0, config.num_mines - self.board.flagged_count())
         time_text = self._format_time(self._elapsed_ms())
-        self.renderer.draw_header(remaining, time_text, flags)
+        self.renderer.draw_header(remaining, time_text)
         now = pygame.time.get_ticks()
         for r in range(self.board.rows):
             for c in range(self.board.cols):
