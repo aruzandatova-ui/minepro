@@ -134,6 +134,10 @@ class InputController:
             game.board.reveal(col, row)
     
         elif button == config.mouse_right:
+            if not game.started:
+                game.started = True 
+                game.start_ticks_ms = pygame.time.get_ticks()
+                
             game.board.toggle_flag(col, row)
            
         elif button == config.mouse_middle:
