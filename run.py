@@ -71,7 +71,7 @@ class Renderer:
                 )
         pygame.draw.rect(self.screen, config.color_grid, rect, 1)
 
-    def draw_header(self, remaining_mines: int, time_text: str) -> None:
+    def draw_header(self, remaining_mines: int, time_text: str, restart_rect: Rect) -> None:
         """Draw the header bar containing remaining mines and elapsed time."""
         pygame.draw.rect(
             self.screen,
@@ -84,6 +84,13 @@ class Renderer:
         right_label = self.header_font.render(right_text, True, config.color_header_text)
         self.screen.blit(left_label, (10, 12))
         self.screen.blit(right_label, (config.width - right_label.get_width() - 10, 12))
+
+        pygame.draw.rect(self.screen, config.color_cell_hidden, restart_rect)
+        pygame.draw.rect(self.screen, config.color_grid, restart_rect, 2)
+
+        btn_label = self.header_font.render("Restart", True, config.color_header_text)
+        btn_rect = btn_label.get_rect(center=restart_rect.center)
+        self.screen.blit(btn_label, btn_rect)
 
     def draw_result_overlay(self, text: str | None) -> None:
         """Draw a semi-transparent overlay with centered result text, if any."""
@@ -116,6 +123,10 @@ class InputController:
         return -1, -1
 
     def handle_mouse(self, pos, button) -> None:
+        # Restart button click (left click)
+        if button == config.mouse_left and self.game.restart_rect.collidepoint(pos):
+            self.game.reset()
+            return
         col, row = self.pos_to_grid(pos[0], pos[1])
         if col == -1:
             return
@@ -190,6 +201,7 @@ class Game:
         self.started = False
         self.start_ticks_ms = 0
         self.end_ticks_ms = 0
+        self.restart_rect = Rect(config.width // 2 - 60, 10, 120, 36)
 
     def reset(self):
         """Reset the game state and start a new board."""
@@ -231,7 +243,7 @@ class Game:
         self.screen.fill(config.color_bg)
         remaining = max(0, config.num_mines - self.board.flagged_count())
         time_text = self._format_time(self._elapsed_ms())
-        self.renderer.draw_header(remaining, time_text)
+        self.renderer.draw_header(remaining, time_text, self.restart_rect)
         now = pygame.time.get_ticks()
         for r in range(self.board.rows):
             for c in range(self.board.cols):
