@@ -81,3 +81,6 @@ result_overlay_alpha = 120
 # Misc
 title = "Minesweeper"
 
+# Sound
+flag_sound_path = "assets/flag.wav"
+flag_sound_volume = 0.5

@@ -147,12 +147,20 @@ class InputController:
 
         if button == config.mouse_left:
             print("Left button to open a cell")
+        
             game.board.reveal(col, row)
     
         elif button == config.mouse_right:
+            was_flagged = cell_state.is_flagged
 
             game.board.toggle_flag(col, row)
            
+            is_flagged = game.board.cells[game.board.index(col, row)].state.is_flagged
+            if (not was_flagged) and is_flagged:
+                sound = getattr(game, "flag_sound", None)
+                if sound is not None:
+                    sound.play()
+
         elif button == config.mouse_middle:
             if cell_state.is_revealed and cell_state.adjacent > 0:
                 neighbors = game.board.neighbors(col, row)
@@ -196,6 +204,13 @@ class Game:
 
     def __init__(self):
         pygame.init()
+        self.flag_sound = None
+        try:
+            pygame.mixer.init()
+            self.flag_sound = pygame.mixer.Sound(config.flag_sound_path)
+            self.flag_sound.set_volume(config.flag_sound_volume)
+        except pygame.error:
+            self.flag_sound = None
         pygame.display.set_caption(config.title)
         self.screen = pygame.display.set_mode(config.display_dimension)
         self.clock = pygame.time.Clock()
