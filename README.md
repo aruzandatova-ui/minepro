@@ -27,12 +27,14 @@
 
 ### 메인 화면
 
-<img width="803" height="883" alt="image" src="https://github.com/user-attachments/assets/8a1eee82-fe60-4eb2-8371-77f657bdd78b" />
+<img width="816" height="911" alt="image" src="https://github.com/user-attachments/assets/37a31640-cdcb-4d81-903f-7349094c4af3" />
+
 
 
 ### 게임 종료 화면
 
-<img width="801" height="849" alt="image" src="https://github.com/user-attachments/assets/267fd666-6003-4843-b77c-3b1da2b37527" />
+<img width="818" height="913" alt="image" src="https://github.com/user-attachments/assets/94757f88-3ecc-4085-a35d-285fea09a59b" />
+
 
 ---
 
