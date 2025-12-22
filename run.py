@@ -140,12 +140,16 @@ class InputController:
 
         cell_state = game.board.cells[game.board.index(col, row)].state
 
+        if (button == config.mouse_left or button == config.mouse_right) and not game.started:
+            game.started = True
+            game.start_ticks_ms = pygame.time.get_ticks()
+
         if button == config.mouse_left:
             print("Left button to open a cell")
-        
             game.board.reveal(col, row)
     
         elif button == config.mouse_right:
+
             game.board.toggle_flag(col, row)
            
         elif button == config.mouse_middle:
